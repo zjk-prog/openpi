@@ -8,9 +8,9 @@ source .venv/bin/activate
 uv pip install transforms3d
 
 # Convert npy data to lerobot dataset 
-CUDA_VISIBLE_DEVICES=0 uv run examples/franka/convert_franka_npy_data_to_lerobot.py \
-    --repo-id "pi05_real_sm_10hz_pp" \
-    --data-dir "share_datasets/pp_withik_10hz" \
+CUDA_VISIBLE_DEVICES=3 uv run examples/franka/convert_franka_npy_data_to_lerobot.py \
+    --repo-id "pi05_real_sm_10hz_overfit" \
+    --data-dir "share_datasets/overfit_dataset" \
     --instruction "pick the dice and place it into the green plate"
 
 # Convert hdf5 data to lerobot dataset 

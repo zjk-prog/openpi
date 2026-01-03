@@ -49,10 +49,10 @@ infer:
 # Deployment config  
 deploy:
   host: "0.0.0.0"
-  port: 12321
+  port: 12323
   checkpoint_step: "25000"                     # Use latest checkpoint
   # GPU settings for deployment
-  gpu_id: 6                                     # Single GPU for deployment
+  gpu_id: 2                                     # Single GPU for deployment
   xla_preallocate: false
 
 # Remote sync config (for downloading checkpoints and assets from remote server)

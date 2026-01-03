@@ -304,7 +304,7 @@ class TaskConfig:
         commands = []
         
         # Sync assets directory
-        assets_src = f"{self.remote.host}:{self.remote.remote_path}/assets/{self.model.config_name}/{self.data.repo_id}/"
+        assets_src = f"{self.remote.host}:{self.remote.remote_path}/assets/{self.model.config_name}/{self.data.repo_id}"
         assets_dst = f"{self.remote.local_path}/assets/{self.model.config_name}/"
         commands.append(f"\n# Sync assets from remote server")
         commands.append(f"mkdir -p {self.remote.local_path}/assets/{self.model.config_name}")

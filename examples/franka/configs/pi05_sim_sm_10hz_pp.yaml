@@ -54,7 +54,7 @@ deploy:
   port: 12311
   checkpoint_step: "25000"                     # Use latest checkpoint
   # GPU settings for deployment
-  gpu_id: 1                                     # Single GPU for deployment
+  gpu_id: 2                                     # Single GPU for deployment
   xla_preallocate: false
 
 

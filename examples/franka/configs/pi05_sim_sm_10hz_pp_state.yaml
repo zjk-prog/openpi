@@ -46,7 +46,7 @@ infer:
 # Deployment config  
 deploy:
   host: "0.0.0.0"
-  port: 12313
+  port: 12315
   checkpoint_step: "25000"                     # Use latest checkpoint
   # GPU settings for deployment
   gpu_id: 2                                     # Single GPU for deployment

@@ -181,15 +181,16 @@ class FrankaSingleCamEEInputs(transforms.DataTransformFn):
         # since the pi0-FAST action_dim = 7, which is < state_dim = 8, so pad is skipped.
         # Keep this for your own dataset, but if your dataset stores the proprioceptive input
         # in a different key than "observation/state", you should change it below.
-        assert data["observation/state"].shape==(7,), f"Expected state shape (7,), got {data['observation/state'].shape}"
+        # assert data["observation/state"].shape==(7,), f"Expected state shape (7,), got {data['observation/state'].shape}"
         if isinstance(data["observation/state"], np.ndarray):
             data["observation/state"] = torch.from_numpy(data["observation/state"]).float()
 
-        xyz = data["observation/state"][:3]  # [x, y, z]
-        euler_xyz = data["observation/state"][3:6]  # [rx, ry, rz]
-        gripper = data["observation/state"][-1:]  # [gripper]
-        rotation_6d = pt.matrix_to_rotation_6d(pt.euler_angles_to_matrix(euler_xyz, convention="XYZ"))
-        state = torch.concat([xyz, rotation_6d, gripper], axis=-1) # [x, y, z, rotation_6d, gripper]
+        # xyz = data["observation/state"][:3]  # [x, y, z]
+        # euler_xyz = data["observation/state"][3:6]  # [rx, ry, rz]
+        # gripper = data["observation/state"][-1:]  # [gripper]
+        # rotation_6d = pt.matrix_to_rotation_6d(pt.euler_angles_to_matrix(euler_xyz, convention="XYZ"))
+        # state = torch.concat([xyz, rotation_6d, gripper], axis=-1) # [x, y, z, rotation_6d, gripper]
+        state = transforms.pad_to_dim(data["observation/state"], self.action_dim)
 
         # Possibly need to parse images to uint8 (H,W,C) since LeRobot automatically
         # stores as float32 (C,H,W), gets skipped for policy inference

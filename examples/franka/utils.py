@@ -54,7 +54,9 @@ def calc_mse_for_single_trajectory(
     for step_cnt in range(steps):
         # traj_id: episode_index, step_cnt: frame_index
         data_point = lerobot_dataset_get_step_data(dataset,traj_id,step_cnt)
-        concat_state = data_point["state"]          # [7,]
+        
+        state_key = "state" if "state" in data_point else "observation.state"
+        concat_state = data_point[state_key]          # [7,]
         concat_gt_action = data_point["actions"][0] # [action_horizon, 7][0]
         state_joints_across_time.append(concat_state)
         gt_action_across_time.append(concat_gt_action)
@@ -63,9 +65,14 @@ def calc_mse_for_single_trajectory(
             print("inferencing at step: ", step_cnt)
             # Convert images from normalized tensor (C, H, W) to uint8 numpy array (H, W, C)
             # This matches the format used in server_policy.py
-            image_uint8 = get_uint8_image(data_point['image'])
-            wrist_image_uint8 = get_uint8_image(data_point['wrist_image'])
-            state_np = data_point['state'].cpu().numpy() if isinstance(data_point['state'], torch.Tensor) else data_point['state']
+            
+            image_key = "image" if "image" in data_point else "observation.image"
+            image_uint8 = get_uint8_image(data_point[image_key])
+            
+            wrist_image_key = "wrist_image" if "wrist_image" in data_point else "observation.wrist_image"
+            wrist_image_uint8 = get_uint8_image(data_point.get(wrist_image_key, data_point[image_key]))
+            
+            state_np = data_point[state_key].cpu().numpy() if isinstance(data_point[state_key], torch.Tensor) else data_point[state_key]
             obs = LeRobotFrankaEEDataConfig.generate_observations(
                     image_uint8, 
                     wrist_image_uint8, 

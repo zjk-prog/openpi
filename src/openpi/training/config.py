@@ -595,10 +595,10 @@ class LeRobotFrankaSingleCamEEDataConfig(DataConfigFactory):
             inputs=[
                 _transforms.RepackTransform(
                     {
-                        "observation/image": "image",
-                        "observation/state": "state",
+                        "observation/image": "observation.image",
+                        "observation/state": "observation.state",
                         "actions": "actions",
-                        "prompt": "prompt",  # Keep prompt field added by PromptFromLeRobotTask
+                        "prompt": "task",  # Keep prompt field added by PromptFromLeRobotTask
                     }
                 )
             ]
@@ -712,6 +712,9 @@ class TrainConfig:
     save_interval: int = 1000
     # If set, any existing checkpoints matching step % keep_period == 0 will not be deleted.
     keep_period: int | None = 5000
+
+    with_ratio: bool = False
+    ratio: float = 0.05
 
     # If true, will overwrite the checkpoint directory if it already exists.
     overwrite: bool = False
@@ -1178,7 +1181,7 @@ _CONFIGS = [
         name="pi05_franka_single_cam",
         model=pi0_config.Pi0Config(pi05=True, action_dim=32, action_horizon=10),
         data=LeRobotFrankaSingleCamEEDataConfig(
-            repo_id=tyro.MISSING,  # must be provided by user via CLI
+            repo_id="real-pnp", # tyro.MISSING,  # must be provided by user via CLI
             base_config=DataConfig(prompt_from_task=True),
             norm_mode="auto",
             # assets will use default value, load norm stats from ./assets/pi05_franka_single_cam/{repo_id}/         ),
@@ -1187,6 +1190,20 @@ _CONFIGS = [
         pytorch_weight_path="checkpoints/torch/pi05_base",
         num_train_steps=30_000,
     ),
+
+    # TrainConfig(
+    #     name="pi05_franka_single_cam_cotrain",
+    #     model=pi0_config.Pi0Config(pi05=True, action_dim=32, action_horizon=10),
+    #     data=LeRobotFrankaSingleCamEEDataConfig(
+    #         repo_id="GSEnv-pnp",  # must be provided by user via CLI
+    #         base_config=DataConfig(prompt_from_task=True),
+    #         norm_mode="auto",
+    #         # assets will use default value, load norm stats from ./assets/pi05_franka_single_cam/{repo_id}/         ),
+    #     ),
+    #     weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
+    #     pytorch_weight_path="checkpoints/torch/pi05_base",
+    #     num_train_steps=30_000,
+    # ),
     #
     # RoboArena configs.
     #
